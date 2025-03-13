@@ -44,10 +44,10 @@ public class OpenAPIConfig {
 
     private Info createApiInfo() {
         return new Info()
-                .title("Job Hunter API")
+                .title("Base Custom API")
                 .version("1.0")
                 .contact(createContact())
-                .description("This API exposes all endpoints (job hunter)")
+                .description("This API exposes all endpoints")
                 .termsOfService("https://kaidev99.com/donate")
                 .license(createLicense());
     }

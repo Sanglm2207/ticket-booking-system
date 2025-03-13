@@ -37,10 +37,10 @@ public class PermissionInterceptor implements HandlerInterceptor {
         System.out.println(">>> requestURI= " + requestURI);
 
         // check permission
-        String email = SecurityUtil.getCurrentUserLogin().isPresent() == true
+        String email = SecurityUtil.getCurrentUserLogin().isPresent()
                 ? SecurityUtil.getCurrentUserLogin().get()
                 : "";
-        if (email != null && !email.isEmpty()) {
+        if (!email.isEmpty()) {
             User user = this.userService.handleGetUserByUsername(email);
             if (user != null) {
                 Role role = user.getRole();
@@ -49,7 +49,7 @@ public class PermissionInterceptor implements HandlerInterceptor {
                     boolean isAllow = permissions.stream().anyMatch(item -> item.getApiPath().equals(path)
                             && item.getMethod().equals(httpMethod));
 
-                    if (isAllow == false) {
+                    if (!isAllow) {
                         throw new PermissionException("Bạn không có quyền truy cập endpoint này.");
                     }
                 } else {

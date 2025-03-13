@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import net.javaguides.jobhunter.domain.Company;
 import net.javaguides.jobhunter.domain.Role;
 import net.javaguides.jobhunter.domain.User;
 import net.javaguides.jobhunter.domain.response.ResCreateUserDTO;
@@ -12,7 +11,6 @@ import net.javaguides.jobhunter.domain.response.ResUpdateUserDTO;
 import net.javaguides.jobhunter.domain.response.ResUserDTO;
 import net.javaguides.jobhunter.domain.response.ResultPaginationDTO;
 import net.javaguides.jobhunter.repository.UserRepository;
-import net.javaguides.jobhunter.service.CompanyService;
 import net.javaguides.jobhunter.service.RoleService;
 import net.javaguides.jobhunter.service.UserService;
 import org.springframework.data.domain.Page;
@@ -24,22 +22,14 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final CompanyService companyService;
     private final RoleService roleService;
 
-    public UserServiceImpl(UserRepository userRepository,
-            CompanyService companyService, RoleService roleService) {
+    public UserServiceImpl(UserRepository userRepository,RoleService roleService) {
         this.userRepository = userRepository;
-        this.companyService = companyService;
         this.roleService = roleService;
     }
     @Override
     public User handleCreateUser(User user) {
-        // check company
-        if (user.getCompany() != null) {
-            Optional<Company> companyOptional = this.companyService.findById(user.getCompany().getId());
-            user.setCompany(companyOptional.isPresent() ? companyOptional.get() : null);
-        }
 
         // check role
         if (user.getRole() != null) {
@@ -97,11 +87,6 @@ public class UserServiceImpl implements UserService {
             currentUser.setAge(reqUser.getAge());
             currentUser.setName(reqUser.getName());
 
-            // check company
-            if (reqUser.getCompany() != null) {
-                Optional<Company> companyOptional = this.companyService.findById(reqUser.getCompany().getId());
-                currentUser.setCompany(companyOptional.isPresent() ? companyOptional.get() : null);
-            }
 
             // check role
             if (reqUser.getRole() != null) {
@@ -138,11 +123,6 @@ public class UserServiceImpl implements UserService {
         res.setGender(user.getGender());
         res.setAddress(user.getAddress());
 
-        if (user.getCompany() != null) {
-            com.setId(user.getCompany().getId());
-            com.setName(user.getCompany().getName());
-            res.setCompany(com);
-        }
         return res;
     }
 
@@ -150,11 +130,6 @@ public class UserServiceImpl implements UserService {
     public ResUpdateUserDTO convertToResUpdateUserDTO(User user) {
         ResUpdateUserDTO res = new ResUpdateUserDTO();
         ResUpdateUserDTO.CompanyUser com = new ResUpdateUserDTO.CompanyUser();
-        if (user.getCompany() != null) {
-            com.setId(user.getCompany().getId());
-            com.setName(user.getCompany().getName());
-            res.setCompany(com);
-        }
 
         res.setId(user.getId());
         res.setName(user.getName());
@@ -170,11 +145,6 @@ public class UserServiceImpl implements UserService {
         ResUserDTO res = new ResUserDTO();
         ResUserDTO.CompanyUser com = new ResUserDTO.CompanyUser();
         ResUserDTO.RoleUser roleUser = new ResUserDTO.RoleUser();
-        if (user.getCompany() != null) {
-            com.setId(user.getCompany().getId());
-            com.setName(user.getCompany().getName());
-            res.setCompany(com);
-        }
 
         if (user.getRole() != null) {
             roleUser.setId(user.getRole().getId());
