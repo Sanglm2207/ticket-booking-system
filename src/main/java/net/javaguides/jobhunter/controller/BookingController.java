@@ -16,6 +16,7 @@ public class BookingController {
     }
 
     @PostMapping("/bookings")
+    @ApiMessage("Book a ticket")
     public ResponseEntity<String> bookTicket(@RequestBody ReqBookingDTO reqBookingDTO) {
         String response = bookingService.bookTicket(reqBookingDTO.getUserId(), reqBookingDTO.getTicketId());
         return ResponseEntity.ok(response);
